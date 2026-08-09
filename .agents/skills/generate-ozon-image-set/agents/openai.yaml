@@ -1,4 +1,4 @@
 interface:
-  display_name: "Ozon ¶íÎÄÌ×Í¼Éú³É"
-  short_description: "´Ó²úÆ·×ÊÁÏÉú³ÉÒ»ÖÂµÄ 8 ÕÅ¶íÎÄ Ozon ÉÌÆ·Ì×Í¼"
-  default_prompt: "Use $generate-ozon-image-set to create an eight-image Russian Ozon product set from my product photos and verified facts."
+  display_name: "Ozon ä¿„æ–‡é«˜ä¿¡æ¯å¥—å›¾"
+  short_description: "æŒ‰äº§å“è´­ä¹°å†³ç­–ç”Ÿæˆé«˜ä¿¡æ¯å¯†åº¦çš„ä¿„æ–‡ Ozon å…«å¼ å¥—å›¾"
+  default_prompt: "Use $generate-ozon-image-set to plan and generate a product-specific, information-rich eight-image Russian Ozon listing set from my verified product evidence."

@@ -1,171 +1,223 @@
 ---
 name: generate-ozon-image-set
-description: Generate a coherent eight-image Russian-language Ozon product listing set from user-supplied product photos and verified product, selling-point, size, package, and optional brand or logo information. Use when Codex must create Ozon main images, white-background product images, lifestyle scenes, benefit infographics, dimension cards, detail cards, footwear cards, or a complete 8-image marketplace set for supported non-regulated physical goods while preserving product identity and preventing invented claims.
+description: Generate a product-specific eight-image Russian Ozon listing set as complete AI-generated final compositions from supplied product photos and verified facts. Use for supported non-regulated physical goods, including footwear and household goods, when Codex must plan the set from buyer decisions instead of a fixed slide template, create information-rich high-impact marketplace visuals, preserve exact product identity, and avoid post-generation text or graphic overlays.
 ---
 
 # Generate Ozon Image Set
 
-Create exactly eight 3:4 Ozon listing images with one visual system, localized Russian copy, traceable facts, and strict product-identity control. Treat the user's photos and confirmed facts as the only source of truth.
+Create eight finished 3:4 Ozon images with accurate Russian copy, traceable facts, strong mobile readability, and strict product-identity control. Generate every page as one complete AI artwork. Never build a background and add text, cards, details, arrows, logos, or product cutouts afterward.
 
 ## Required references
 
-- Read [category-and-localization.md](references/category-and-localization.md) before planning any set.
-- Read [reference-analysis.md](references/reference-analysis.md) when choosing visual hierarchy, layouts, badges, scene intensity, or information density. Do not copy a reference literally.
+- Read [category-and-localization.md](references/category-and-localization.md) before planning.
+- Read [reference-analysis.md](references/reference-analysis.md) before choosing page roles, information density, hierarchy, colors, typography, details, dimensions, or scenes.
 
 ## Workflow
 
 ### 1. Inspect and gate inputs
 
-Inspect every supplied image at high detail before drafting copy or generating images. Label each image as `primary reference`, `alternate view`, `detail reference`, `packaging reference`, or `logo`.
+Inspect every supplied image at high detail. Label it `primary reference`, `alternate view`, `detail reference`, `packaging reference`, `on-body reference`, or `logo`.
 
 Require:
 
-- supported category and product name;
+- supported category and exact product name;
 - at least one sharp, unobstructed real product image;
-- color/model/variant;
-- exact material;
-- exact quantity and package contents;
-- exact dimensions needed for the dimensions card;
-- verified selling points with a source for every claim.
+- color/model/variant, material, quantity, package contents, and dimensions;
+- sourced selling points and specifications;
+- additional views for any interior, underside, worn, open, or detail evidence the set will show.
 
-Treat brand name, logo, preferred palette, and audience as optional. Pause and ask only for the smallest missing set when a required fact or necessary view is absent. Never fill gaps from visual guesswork, category norms, competitor listings, or generated content.
+Treat brand, logo, palette, and audience as optional. Never fill factual gaps from appearance, category norms, competitors, or generated content. Apply the footwear adapter when relevant.
 
-Reject unsupported regulated categories listed in the category reference. For footwear, apply its dedicated input gate.
+### 2. Build the fact ledger
 
-### 2. Build the fact ledger and Russian copy
+Create a schema-version-2 manifest. Give every fact a stable `id`, `value`, source, and `confirmed: true`. Mark the facts that actually affect purchase in `set_strategy.priority_fact_ids`. Every priority fact must appear in at least one slide claim.
 
-Create a draft `production-manifest.json` using the schema described below. Give every usable fact a stable `id`, `value`, non-empty `source`, and `confirmed: true`. Reference fact IDs from slide `claims`; never place an unreferenced factual assertion on a slide.
+Write natural Russian shopper copy. Preserve supplied brand/model spelling and printed packaging text. Add permitted Latin brand/model tokens to `allowed_non_russian_terms`. Do not turn a visible feature into an unsupported performance claim.
 
-Write all added copy in localized Russian. Preserve real brand/model spelling and printed packaging text. Do not translate or redraw physical labels because that would change the product. Add brand/model tokens to `allowed_non_russian_terms` when they use Latin characters.
+Before `prepare`, freeze an exact Russian copy deck for all eight pages. Review every title, subtitle, bullet, label, number, and unit for:
 
-Resolve this skill's directory from the loaded `SKILL.md`. The commands below assume the current working directory is the project root. Run:
+- natural `ru-RU` wording rather than literal Chinese or English translation;
+- grammar, case, number, gender, adjective/noun agreement, punctuation, decimal commas, and unit spacing;
+- concise marketplace language that answers the buyer question without keyword stuffing;
+- exact agreement with the confirmed fact ledger and package contents;
+- absence of unsupported performance, season, origin, certification, ranking, promotion, or superlative claims.
 
-```powershell
-python .agents/skills/generate-ozon-image-set/scripts/ozon_set.py prepare --manifest <draft-manifest.json> --workspace <current-project>
-```
+Record the completed preflight in `localization_review`. Do not call image generation until `pre_generation_approved` and all five `pre_generation_checks` are `true`. Freeze the approved text verbatim; prompts may not improvise synonyms, extra benefits, or alternate numbers after approval.
 
-Use the printed job directory for all later work. `prepare` creates a non-overwriting `output/ozon/<sku>-<timestamp>/production-manifest.json` and an `image-prompts.md` file.
-
-### 3. Lock the visual system and slide plan
-
-Define one shared design system before generating bases:
-
-- 3–5 color palette;
-- regular and bold Cyrillic-capable fonts;
-- title/body sizes and maximum line counts;
-- badge, icon, corner-radius, shadow, and inset-detail treatment;
-- one lighting direction, contrast level, material treatment, and scene mood.
-
-Plan these six required slide types:
-
-1. `hero`
-2. `white-background`
-3. `scene`
-4. `benefits`
-5. `dimensions`
-6. `details`
-
-Choose slides 7 and 8 adaptively from `package`, `usage`, `materials`, `scene`, `brand`, or `comparison`. Use `comparison` only when the user supplied both sides' images/data and sources. Keep `hero` factual and restrained; if current category rules disallow main-image text, set `text_allowed: false` and move its copy to another slide.
-
-### 4. Generate text-free bases
-
-Use the built-in `image_gen` tool by default. Make one distinct call per slide base; do not request eight different assets in one prompt. Inspect local source images first, then pass the same complete reference set to every identity-sensitive call.
-
-For each prompt:
-
-- set `Use case` to `product-mockup`, `photorealistic-natural`, or `ads-marketing` as appropriate;
-- state that the output is a text-free 3:4 Ozon base;
-- repeat product invariants from `product.identity_lock`;
-- forbid any text, logo invention, watermark, badge, altered quantity, alternate color, new component, or new angle unsupported by the references;
-- leave deliberate negative space for deterministic Russian copy;
-- reuse the manifest palette, lighting, and material treatment.
-
-Prefer exact source pixels, supplied transparent product images, and real detail crops. When a clean transparent product source is available, set `product.identity_strategy` to `source-pixel-composite`, place that same file in `product.source_images`, and add it to every slide through `product_layers`. Generate backgrounds without the product, then let the renderer composite the locked pixels. With one product view, preserve that angle across the set. Never invent a back, sole, internal structure, attachment, package item, or alternate model. For complex transparency, avoid a silent CLI/model fallback; use a complete text-free base or ask before any true-transparency fallback.
-
-Copy selected generated bases into the job directory. Update each slide's `base_image` path and, if needed, `product_layers`, `detail_circles`, or `dimensions` annotations in the copied manifest. A product layer uses normalized center coordinates and width, for example `{"image":"product.png","x":0.5,"y":0.58,"width":0.72,"rotation":0,"shadow":true}`. Keep rotation within ±15°. Under `source-pixel-composite`, every layer image must be a transparent file listed in `product.source_images`.
-
-### 5. Render deterministic Russian text
-
-Render with:
+Run `prepare`:
 
 ```powershell
-python .agents/skills/generate-ozon-image-set/scripts/ozon_set.py render --manifest <job-dir>/production-manifest.json
+<python-executable> .agents/skills/generate-ozon-image-set/scripts/ozon_set.py prepare --manifest <draft-manifest.json> --workspace <current-project>
 ```
 
-Use the script for all added titles, subtitles, bullets, badges, dimension arrows, real-image detail circles, and supplied logos. Never ask the image model to spell the final Russian text. The renderer writes `01-hero.png` through `08-*.png`, or versioned siblings on rerun, and records each path as `rendered_file`.
+Use the printed job directory for the production manifest and all images.
 
-### 6. Validate and visually review
+### 3. Plan from buyer decisions, not fixed page types
 
-Open all eight full-resolution images and the contact sheet. Compare every slide against the source images for silhouette, proportions, color, material, seams, controls, accessories, branding, product count, package count, and visible text.
+Write `set_strategy` before writing slides:
 
-Set all `manual_qa` values to `true` only after completing those checks:
+- `audience`: intended shopper;
+- `buyer_questions`: the eight most useful questions this product can truthfully answer;
+- `priority_fact_ids`: decision-relevant fact IDs that the set must cover;
+- `palette`: 3–5 colors including the exact product color, a neutral, and one or two contrasting accents;
+- `typography`: one legible Cyrillic type direction;
+- `visual_thesis`: the set-wide visual and selling idea.
+
+Make slide 1 a `hero`. Select slides 2–8 solely from product evidence and buyer questions. Allowed types include `decision-overview`, `white-background`, `size-fit`, `dimensions`, `construction`, `feature-proof`, `benefits`, `details`, `materials`, `angles`, `usage`, `scene`, `care`, `package`, `configuration`, `compatibility`, `brand`, and `comparison`.
+
+Do not require a white-background, scene, benefits, dimensions, details, or materials page. Use one only when it resolves an important question better than another page.
+
+For each slide, record:
+
+- `purpose`: one unique sentence describing the page's job;
+- `buyer_question`: one unique shopper question it answers;
+- `selection_reason`: why this content deserves a full page;
+- `information_units`: the meaningful items visible on the page, such as product name, quantity, number, specification, benefit, usage result, package item, or detail label.
+
+Reject semantic duplicates. A materials page and a details page are duplicates when both merely show the same three surface close-ups. Merge them and use the freed page for another buyer question. Repetition is allowed only when the hero summarizes a fact that a later page proves in greater depth.
+
+### 4. Design for mobile click and scan behavior
+
+Use the high-click references as attention hypotheses, not proof of conversion.
+
+For the hero:
+
+- give the product or truthful bundle about 55–75% of meaningful visual area;
+- use a large category/product headline when current rules permit it;
+- use one large numeric anchor when quantity, capacity, size, or another sourced number matters;
+- add one or two short supporting facts;
+- use 3–6 information units total when text is allowed;
+- keep uninformative empty background below roughly 20% of the canvas.
+
+For information pages:
+
+- keep the product or demonstrated use at about 45–70% of meaningful visual area;
+- use 4–7 useful information units, without repeating another page;
+- make the title readable in a search thumbnail and body copy readable on a phone;
+- target title letter height around 7–12% of canvas height and body letter height around 2.5–4%;
+- prefer one strong number, a short headline, and 2–4 supporting facts over many tiny badges;
+- use compact high-contrast labels or badges only when they remain outside important product structure.
+
+Use richer but controlled color. Preserve the exact product color, then add category-relevant scene colors and a clear accent. Avoid an eight-page wash of the same cream background. Keep typography, product treatment, and accent logic consistent while varying composition and scene intensity.
+
+### 5. Generate complete AI artworks
+
+Use the built-in `image_gen` tool by default. Make one distinct call per page and pass the same complete identity-reference set to every identity-sensitive call.
+
+Every prompt must include:
+
+- `Asset type: complete final 3:4 Ozon listing image`;
+- the page purpose, buyer question, and required information units;
+- exact Russian title, subtitle, bullets, labels, and numbers verbatim;
+- product invariants from `product.identity_lock`;
+- target product-area, hierarchy, text-size, color, and empty-space guidance;
+- explicit non-overlap zones;
+- no watermark, invented logo, unsupported claim, altered quantity, alternate color, new component, or unsupported angle.
+
+Treat the output as final artwork. A format-only resize is allowed; adding or replacing visible content after generation is not.
+
+### 6. Apply page-specific truth rules
+
+For every page:
+
+- keep shopper text outside critical product features and maintain immediate legibility;
+- allow small high-contrast text modules, but never place a large opaque or translucent panel over the product;
+- do not shrink the product just to create decorative whitespace;
+- do not use flags, medals, ratings, certifications, official-store claims, prices, discounts, or promotional urgency without explicit evidence and current permission.
+
+For detail, material, and construction content:
+
+- show only supplied visible evidence;
+- keep enlargements outside the main product silhouette;
+- combine related evidence on one page when it answers the same question;
+- never create multiple pages that reuse the same close-ups with different headings.
+
+For dimensions and footwear sizing:
+
+- use a supported view;
+- make arrow endpoints touch the true visible extrema;
+- keep arrows parallel to the measured axis and labels outside the product;
+- use a size table instead of meaningless arrows when the buyer needs a mapping rather than a physical product dimension.
+
+For scenes and usage:
+
+- include them only when the context explains fit, scale, handling, outcome, placement, or use;
+- do not use decorative lifestyle imagery that answers no buyer question;
+- do not imply an accessory, food, performance result, or use claim that is absent from supplied evidence.
+
+### 7. Inspect and iterate
+
+Open every image at full resolution and as a contact sheet. Check:
+
+- exact product identity, count, color, proportions, construction, accessories, and packaging;
+- exact Russian spelling, units, punctuation, and line breaks;
+- title and body legibility at contact-sheet size;
+- sufficient product scale and no excessive dead space;
+- useful information density and a clear hierarchy;
+- controlled color variety across the set;
+- unique page purpose and buyer question;
+- no repeated detail/material page;
+- correct detail placement and measurement alignment.
+
+Transcribe every visible string from every final page and compare it line by line with the frozen copy deck. Record all eight comparisons in `localization_review.slide_checks`, including `expected_text`, `observed_text`, and `status`. Check meaning as well as spelling: the sentence must be natural Russian, factually correct, appropriate for ecommerce, and unambiguous in context.
+
+Treat any misspelling, malformed Cyrillic, missing or duplicated word, wrong number or unit, unnatural phrase, untranslated fragment, added claim, or visible text absent from the approved deck as a page-generation failure. Regenerate or AI-edit the complete page and repeat the transcription. Never repair text with a post-generation overlay. Set `post_generation_approved: true` only when all eight transcription records pass exactly.
+
+Regenerate or AI-edit a failing complete page. Never repair it with PIL, canvas, SVG, or another text/graphic overlay renderer.
+
+### 8. Validate
+
+Set manual gates to `true` only after review:
 
 - `product_identity`
 - `style_consistency`
-- `russian_proofread`
+- `russian_text_accuracy`
+- `layout_integrity`
+- `measurement_alignment`
 - `platform_rules`
-
-For `platform_rules`, first try to read the current official URL. Record `platform_check.status: verified` only when the official rule text was actually available. If the page remains unavailable after one retry, use `status: conservative-fallback`, record the concrete `retrieval_error`, force the hero to `text_allowed: false`, and state in `category_decision` that upload-time recheck is still mandatory. Set the manual gate to true only after reviewing that handling; never describe fallback status as official verification.
+- `mobile_legibility`
+- `information_density`
+- `page_uniqueness`
+- `color_variety`
 
 Then run:
 
 ```powershell
-python .agents/skills/generate-ozon-image-set/scripts/ozon_set.py validate --manifest <job-dir>/production-manifest.json
+<python-executable> .agents/skills/generate-ozon-image-set/scripts/ozon_set.py validate --manifest <job-dir>/production-manifest.json
 ```
 
-Do not deliver while the report contains an error or an unchecked manual gate. A `conservative-fallback` warning may remain only when the official Ozon page was genuinely unreachable, the hero is text-free, and the handoff explicitly says the set still needs an upload-time rule recheck. If product drift occurs, regenerate that base with one targeted correction; if it persists, fall back to an exact supplied cutout/view and a simpler scene.
+Do not deliver with an error or unchecked gate. Record unavailable platform rules honestly and require an upload-time recheck; do not claim verification or CTR improvement without evidence.
 
 ## Manifest contract
 
-Use UTF-8 JSON with these top-level keys:
+Use UTF-8 JSON with `schema_version: 2`. Include `set_strategy`. Each slide must contain `index`, `type`, `filename`, `purpose`, `buyer_question`, `selection_reason`, `information_units`, `layout`, `title`, `subtitle`, `bullets`, `claims`, `generation_prompt`, and `final_image`.
+
+Include this mandatory localization record:
 
 ```json
 {
-  "schema_version": 1,
-  "sku": "stable-sku-or-slug",
-  "category": "home",
-  "allowed_non_russian_terms": ["Brand", "Model-X"],
-  "product": {
-    "name_source": "source-language name",
-    "name_ru": "Русское название",
-    "color": "Белый",
-    "model": "",
-    "material": "Керамика",
-    "quantity": "6 шт.",
-    "package_contents": ["6 салатников"],
-    "dimensions": [{"label": "Диаметр", "value": "14 см"}],
-    "source_images": ["absolute-or-draft-relative-path"],
-    "brand": {"name": "", "logo": null},
-    "identity_lock": ["white ribbed ceramic bowls", "six-piece set"]
-  },
-  "facts": [
-    {"id": "quantity", "value": "6 шт.", "source": "user brief", "confirmed": true}
-  ],
-  "design": {
-    "palette": {"primary": "#33214B", "secondary": "#F4E9DC", "accent": "#E8A33A", "text": "#FFFFFF"},
-    "fonts": {"regular": null, "bold": null}
-  },
-  "manual_qa": {
-    "product_identity": false,
-    "style_consistency": false,
-    "russian_proofread": false,
-    "platform_rules": false
-  },
-  "slides": []
+  "localization_review": {
+    "locale": "ru-RU",
+    "pre_generation_approved": true,
+    "pre_generation_checks": {
+      "natural_russian": true,
+      "grammar_and_agreement": true,
+      "ecommerce_fit": true,
+      "fact_alignment": true,
+      "claim_safety": true
+    },
+    "post_generation_approved": false,
+    "slide_checks": []
+  }
 }
 ```
 
-Each slide must contain `index`, `type`, `filename`, `layout`, `title`, `subtitle`, `bullets`, `claims`, `generation_prompt`, and `base_image`. `base_image` may be empty during `prepare` but must point to a real text-free base before `render`. Optional keys are `logo`, `text_allowed`, `requires_new_angle`, `product_layers`, `dimensions`, `detail_circles`, `text_blocks`, and `comparison_sources`. Use `product.identity_strategy: source-pixel-composite` whenever every page can reuse an unchanged transparent source; otherwise use `reference-guided` and document the manual identity review.
+After generation, change `post_generation_approved` to `true` only after adding eight `slide_checks`. Each check must contain `index`, `status: "pass"`, and exact `expected_text` and `observed_text` lists. The observed list must transcribe every visible string, including AI-added text; the two lists must match after whitespace normalization.
 
-Use normalized 0–1 coordinates for dimension points, detail-circle centers, and custom text blocks. Consult `python .agents/skills/generate-ozon-image-set/scripts/ozon_set.py --help` for command details.
+Do not use legacy overlay fields: `base_image`, `product_layers`, `detail_circles`, `dimensions`, `text_blocks`, slide-level `logo`, or `rendered_file`.
+
+Use `text_allowed: false` only when current rules require a text-free hero. Use `requires_new_angle: true` only when sources support the view. Use `comparison_sources` for sourced comparisons.
 
 ## Delivery
 
-Deliver exactly eight rendered PNG files plus:
-
-- `production-manifest.json`
-- `image-prompts.md`
-- `qa-report.md`
-- `contact-sheet.jpg`
-
-Report the job directory, the built-in image-generation path used, and any intentionally omitted or simplified visual because the source evidence was insufficient. Never claim CTR or conversion improvement without actual experiment data.
+Deliver eight complete final PNG files plus `production-manifest.json`, `image-prompts.md`, `qa-report.md`, and `contact-sheet.jpg`. Report the job directory, generation path, upload-time rule warning, and any omitted page caused by insufficient evidence.

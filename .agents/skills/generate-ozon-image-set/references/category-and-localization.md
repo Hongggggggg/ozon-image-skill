@@ -43,24 +43,26 @@ Require:
 
 Do not convert CN/EU/RU sizes from memory. Do not infer waterproofing, warmth, arch support, orthopedic value, slip resistance, natural leather, or season rating from appearance. If a chart is absent, pause before making the dimension/size card.
 
-## Eight-slide policy
+## Product-specific eight-slide policy
 
-Required sequence:
+Require slide 1 to be a current-rule-compliant hero. Do not impose a universal sequence on slides 2–8. Rank the buyer questions that can be answered from supplied evidence, then give each remaining page one distinct decision job.
 
-1. Hero / current-rule-compliant main candidate
-2. White or current-category neutral-background exact product
-3. Primary use scene
-4. Verified benefits
-5. Dimensions or footwear size information
-6. Real visible details
-7. Adaptive decision-support page
-8. Adaptive decision-support page
+Possible pages include exact-product overview, size/fit, dimensions, construction, feature proof, materials, real details, alternate angles, usage, context, care, package contents, configuration, compatibility, supplied brand story, and sourced comparison. None is mandatory merely because it is common in marketplace templates.
 
-Adaptive pages may be package contents, usage steps, material/process, second scene, supplied brand story, or sourced comparison. Do not repeat the same information merely to reach eight slides. When the product has too little truthful information, use a second conservative scene or a different supplied view; otherwise pause for evidence.
+Give every page a unique purpose, buyer question, and selection reason. Merge pages that use the same evidence or answer the same question. In particular, do not create separate material and detail pages when both repeat the same surface, seam, control, or outsole close-ups.
+
+Cover every priority fact at least once. Repeat a fact only when the hero summarizes it and a later page provides deeper proof. If the product lacks eight truthful and useful questions, request more evidence or use a distinct supported exact-product angle; never add decorative scenes or duplicate details only to fill the set.
 
 ## Russian localization
 
 All added shopper-facing text must be Russian except real brand names, model identifiers, and legally printed packaging text.
+
+Use a two-pass localization gate:
+
+1. **Pre-generation editorial pass:** approve the exact eight-page copy deck before prompting. Check natural Russian usage, grammar and agreement, ecommerce clarity, fact alignment, and claim safety. Freeze the approved strings.
+2. **Post-generation visual pass:** at full resolution, transcribe every visible string on each page and compare it with the approved deck. Check not only spelling but also meaning, naturalness, factual accuracy, line-break ambiguity, numbers, and units. Extra AI-generated text is a failure even when it is grammatically correct.
+
+Do not accept a page because its headline is readable while a smaller label is wrong. One malformed character, invented word, missing qualifier, altered number, duplicated phrase, untranslated fragment, or unnatural marketplace expression requires complete-page regeneration or AI editing followed by a new transcription pass.
 
 Use:
 
@@ -107,4 +109,4 @@ Treat the following as conservative production defaults, not a substitute for ru
 
 Record the official URL checked, check date, category, and any category-specific decision in the manifest or QA notes.
 
-If the official page remains unreachable after one retry, do not claim it was verified. Record `platform_check.status` as `conservative-fallback`, include the retrieval error, make the hero text-free, apply every conservative default above, and flag an upload-time recheck as mandatory. Use `verified` only when the official rule text was actually available.
+If the official page remains unreachable after one retry, do not claim it was verified. Record `platform_check.status` as `conservative-fallback`, include the retrieval error, apply every conservative default above, and flag an upload-time recheck as mandatory. Use a text-free hero only when available evidence indicates that the category requires it; otherwise limit hero copy to the sourced product/category name and decision facts, without promotions, marketplace UI, badges, or unsupported claims. Use `verified` only when the official rule text was actually available.

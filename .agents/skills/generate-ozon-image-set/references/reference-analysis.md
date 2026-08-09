@@ -6,6 +6,26 @@ The source directory contains 15 portrait images, mostly 3:4 listing-cover compo
 
 Treat all conclusions below as design hypotheses. Preserve useful mechanisms; do not inherit unsupported claims or visual clutter.
 
+## Complete-image composition rules
+
+Generate each listing page as a finished AI image. Do not treat the page as a background that will later receive template text, cards, circles, arrows, or product cutouts.
+
+- Reserve real negative space for copy during composition. Keep text outside the product silhouette and avoid full-width dark or translucent rectangles over the product.
+- Prefer typography that belongs to the scene through scale, alignment, local contrast, restrained shadow, or outline. Avoid large generic UI cards unless the product category genuinely benefits from a small isolated information module.
+- Keep the product visually dominant. Do not reduce it to a small object above a stack of template cards.
+- On detail pages, keep the main product and enlargements in separate non-overlapping zones. A detail inset must never cover the product it explains.
+- On dimension pages, align arrow endpoints to the visible extrema of the measured axis. Do not attach width, depth, height, sole-length, or foot-length labels to unrelated perspective edges.
+- Treat misspelled Russian, text collisions, product overlap, floating detail crops, and misaligned measurement arrows as generation failures. Regenerate or edit the complete page; do not patch with overlays.
+
+## Set-planning rules
+
+- Treat these references primarily as individual high-attention covers, not evidence that every product needs the same supporting pages.
+- Start with buyer questions and verified facts. Assign one distinct decision job to each page before choosing its visual type.
+- Do not require scene, benefits, dimensions, details, materials, or white-background pages. Include a page only when it resolves a meaningful question for that exact product.
+- Merge material, construction, and detail content when they use the same visual evidence. Repeated close-ups under different headings are one page, not two.
+- Cover all priority facts across the set and reserve repetition for hero summary plus later proof.
+- A scene must prove fit, scale, handling, placement, use, or outcome. Decorative atmosphere alone does not justify a page.
+
 ## Cross-sample findings
 
 ### Likely click-supporting mechanisms
@@ -56,10 +76,13 @@ Treat all conclusions below as design hypotheses. Preserve useful mechanisms; do
 
 ## Design rules derived from the sample
 
-1. Give the product 55–75% of the meaningful visual area on hero and clean product cards.
-2. Use one headline, one numeric anchor, and at most two supporting facts on the hero.
-3. Use 2–4 benefits on dedicated infographic slides, not eight micro-badges on the cover.
-4. Reserve emotional/lifestyle imagery for scenes; keep a separate exact-product white-background view.
-5. Use numbers only when they resolve a buyer question and have a fact-ledger source.
-6. Use one tokenized visual system across the set while varying composition by slide purpose.
-7. Treat badges, flags, medals, ratings, certifications, and comparison claims as prohibited unless the user provides explicit evidence and Ozon currently permits them.
+1. Give the product or truthful bundle 55–75% of the meaningful hero area and 45–70% on supporting pages.
+2. When hero text is permitted, use one large headline, one numeric anchor when relevant, and one or two supporting facts; target 3–6 useful information units in total.
+3. Target 4–7 useful information units on supporting pages. Prefer a clear headline, one proof number, and 2–4 supporting facts over tiny microcopy.
+4. Make headline letter height roughly 7–12% of canvas height and body letter height roughly 2.5–4%. Verify both at contact-sheet size.
+5. Keep low-detail dead background below roughly 20% unless a premium composition has enough product scale and concrete information to justify restraint.
+6. Use 3–5 coordinated colors: exact product color, a neutral, a category-relevant scene color, and one or two high-contrast accents. Avoid repeating the same pale background across all eight pages.
+7. Use emotional or lifestyle imagery only when it answers a buyer question; an exact-product white view is optional rather than mandatory.
+8. Use numbers only when they resolve a buyer question and have a fact-ledger source.
+9. Keep one visual system while varying composition, color emphasis, and scene intensity by page purpose.
+10. Treat badges, flags, medals, ratings, certifications, and comparison claims as prohibited unless explicitly evidenced and currently permitted.
