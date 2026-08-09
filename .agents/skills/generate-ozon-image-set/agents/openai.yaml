@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ozon 俄文套图生成"
+  short_description: "从产品资料生成一致的 8 张俄文 Ozon 商品套图"
+  default_prompt: "Use $generate-ozon-image-set to create an eight-image Russian Ozon product set from my product photos and verified facts."
