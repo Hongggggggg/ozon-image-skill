@@ -1,4 +1,0 @@
-interface:
-  display_name: "Ozon 俄文高信息套图"
-  short_description: "按产品购买决策生成高信息密度的俄文 Ozon 八张套图"
-  default_prompt: "Use $generate-ozon-image-set to plan and generate a product-specific, information-rich eight-image Russian Ozon listing set from my verified product evidence."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ozon Listing Workflow"
+  short_description: "Russian Ozon search titles, images, copy, and QA"
+  default_prompt: "Use $ozon-listing-workflow to create an evidence-backed Russian Ozon listing with product-specific search-intent title coverage, let me choose up to eight required image types, complete a unified ten-image set, and perform QA."
